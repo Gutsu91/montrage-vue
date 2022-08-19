@@ -39,8 +39,8 @@
         <input type="text" placeholder="Nom de la tâche" v-model="newTask.taskName">
         <textarea name="" id="" cols="30" rows="4" max="62" v-model="newTask.taskDesc">Description de la tâche (max62char)</textarea>
         <select v-model="newTask.taskStatus" name="taskStatus">
-          <option value=true name="done">Fait</option>
-          <option value=false name="to do">À faire</option>
+          <option value="done" name="done" :value=true>Fait</option>
+          <option value="to do" name="to do" :value=false>À faire</option>
         </select>
         <button>Créer la tâche</button>
       </form>
@@ -52,7 +52,7 @@
           :data-id="index" 
           v-for="(task, index) in taskList" 
           class="task" 
-          :class="{done: task.taskStatus === 'Fait', todo: !task.taskStatus === 'Fait'}"
+          :class="{done: task.taskStatus === 'done'}"
           @click="switchTask($event)"
           >
             <strong
@@ -91,9 +91,15 @@
           console.log(this.taskList)
         },
         switchTask() {
-          console.log('tâche clickée :' + event.target.dataset.id)
-          const test = event.target.dataset.id
-          console.log(this.taskList[test])
+          const taskIndex = event.target.dataset.id
+          console.log(this.taskList[taskIndex].taskStatus)
+          if(this.taskList[taskIndex].taskStatus === "done") {
+            this.taskList[taskIndex].taskStatus = "to do"
+          } else {
+            this.taskList[taskIndex].taskStatus = "done"
+          }
+          console.log(this.taskList[taskIndex])
+          
         }
       },
       created(){
