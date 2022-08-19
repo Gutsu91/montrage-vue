@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-do list Vue.js</title>
+  <style>
+    [v-cloak] {
+      display:none;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 200px;
+    }
+    .task::after {
+      content: "A faire";
+      font-size: 0.8rem;
+      vertical-align: super;
+      background: #f59e84;
+    }
+    .done::after {
+      content:"Fait";
+      vertical-align: super;
+      font-size: 0.8rem;
+      background: #9bf584;
+    }
+
+  </style>
+  
+</head>
+<body>
+  <div id="app" v-cloak>
+    <section>
+      <h1>To-do list</h1>
+      <form action="" @submit.prevent="addTask" ref="addTask">
+        <input type="text" placeholder="Nom de la tâche" v-model="newTask.taskName">
+        <textarea name="" id="" cols="30" rows="4" max="62" v-model="newTask.taskDesc">Description de la tâche (max62char)</textarea>
+        <select v-model="newTask.taskStatus" name="taskStatus">
+          <option value=true name="done">Fait</option>
+          <option value=false name="to do">À faire</option>
+        </select>
+        <button>Créer la tâche</button>
+      </form>
+      <hr>
+      <h2>Liste des tâches</h2>
+      <ul ref="todo" v-if="taskList.length > 0">
+        <li 
+          :key="index" 
+          :data-id="index" 
+          v-for="(task, index) in taskList" 
+          class="task" 
+          :class="{done: task.taskStatus === 'Fait', todo: !task.taskStatus === 'Fait'}"
+          @click="switchTask($event)"
+          >
+            <strong
+              :data-id="index"
+            >{{ task.taskName }}</strong> 
+            : {{ task.taskDesc }}
+        </li>
+      </ul>
+      <p v-else>Pas de tâche pour l'instant</p>
+    </section>
+  </div>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script>
+    const app = Vue.createApp({ 
+      name: "To-do list",
+      data() { 
+        return {
+         newTask: {
+          taskName: '',
+          taskDesc:'',
+          taskStatus: ''
+         },
+         taskList: []
+        } 
+      },
+      methods: {
+        addTask() {
+          this.taskList.push({... this.newTask}) 
+          localStorage.setItem('taskList', JSON.stringify(this.taskList)) // on flanque personnel dans le local storage
+          this.$refs.addTask.reset() // on vide le formulaire après qu'il ait été soumis
+          this.newTask = {
+            taskName: '',
+            taskDesc:'',
+            taskStatus: ''
+          }
+          console.log(this.taskList)
+        },
+        switchTask() {
+          console.log('tâche clickée :' + event.target.dataset.id)
+          const test = event.target.dataset.id
+          console.log(this.taskList[test])
+        }
+      },
+      created(){
+        localStorage.taskList 
+        ? this.taskList = JSON.parse(localStorage.taskList)
+        : console.log('pas de liste de tâche en mémoire')
+      }
+
+    }); 
+    const vm = app.mount('#app')
+  </script>
+  
+</body>
+</html>
+<!-- 
+TODO list:
+- tâche
+- statut de la tâche
+Si la tâche est completed, alors on ajoute une classe
+
+
+
+-->
