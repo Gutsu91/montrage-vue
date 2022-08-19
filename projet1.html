@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon premier projet Vue.js</title>
+  <style>
+    [v-cloak] {
+      display:none;
+    }
+  </style>
+  
+</head>
+<body>
+  <div id="app" v-cloak>
+    <section v-bind:id="zbreh"> <!-- on indique à vue qu'il doit aller chercher un attribut dynamique qui doit être égal à la valeur id du data state-->
+      <!-- on est plus obligé de taper v-bind, on peut juste mettre : devant un attribut pour faire un biding (donc ça donnerait :id="zbreh")-->
+    <h1>{{ titre.toUpperCase() }}</h1> <!-- On fout une balise h1 et ont dit qu'elle doit être égale a l'objet titre contenu dans data. On peut aussi très bien ajouter une methode JavaScript sur l'entrée texte mais c'est déconseillé, ce genre de truc on fait avec du css -->
+    <p>{{ texte }}</p>
+    <p>Il est exactement {{time }}</p>
+    <p>{{ inter ? "vrai" : "faux" }}</p>
+    <p>{{!inter?"vrai":"faux"}}</p>
+    </section>
+
+  </div>
+  <script src="https://unpkg.com/vue@next"></script>
+  <!-- @next pour être sur d'aller chercher la dernière version -->
+  <script>
+    const app = Vue.createApp({ // on déclare l'application avec la methode createApp
+      name: "firstVueApp",
+      data() { // dans vue v3, data doit être une fonction qui retourne des objets. c'est ce qu'on appelle un data state (ou set, pierre est plus sur)
+        return {
+          titre: "Contenu du titre",
+          texte: "lorem ipsum doler",
+          zbreh: "app-4",
+          time: new Date().toLocaleTimeString(), // on dit que time doit être égal à des méthodes
+          inter: true
+        }
+      }
+    }); 
+    app.mount('#app') // on dit qu'elle doit être mount dans l'élément qui a l'id app
+  </script>
+  
+</body>
+</html>

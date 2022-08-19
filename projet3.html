@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon premier projet Vue.js</title>
+  <style>
+    [v-cloak] {
+      display:none;
+    }
+  </style>
+  
+</head>
+<body>
+  <div id="app" v-cloak>
+    <section>
+      <h1>{{ titre }}</h1>
+      <p>{{ texte }}</p>
+      <div style="display:flex; gap:2rem; margin: 1rem;">
+      <img :src="tempUrl" alt="" width=500 @click="toggle">
+      </div>
+      <div style="display:flex; gap:2rem; margin: 1rem;">
+        <img :src="poopUrl" alt="" @click="togglePoop">
+      </div>
+    </section>
+    <section>
+      <p>{{texteBrut}}</p>
+      <p>{{texteHtml}}</p> <!-- la balise strong n'est pas render-->
+      <p v-html="texteHtml"></p> <!-- on donne la directive v-html = texteHtml pour pouvoir rendre les balises html-->
+    </section>
+
+  </div>
+  <script src="https://unpkg.com/vue@next"></script>
+  <!-- @next pour être sur d'aller chercher la dernière version -->
+  <script>
+    const app = Vue.createApp({ // on déclare l'application avec la methode createApp
+      name: "Macron est-il de gauche ou de droite ?",
+      data() { 
+        return {
+          titre: "Macron est-il ni de gauche ni de droite?",
+          texte: "Cliquez-lui d'ssus pour le découvrir",
+          urlA: "https://pbs.twimg.com/media/DxmOzV6XgAAvmqq.jpg",
+          urlB: "https://pbs.twimg.com/media/ErgxTv2XAAEl33f.jpg",
+          tempUrl: "https://pbs.twimg.com/media/ErgxTv2XAAEl33f.jpg" // le probleme avec ceci c'est qu'on répère deux fois la même info, a savoir l'url d'entrée. On va faire la même chose ci-dessous, mais en disant au chargement que tempURL = url A
+          ,
+          urlC: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl9-Y2_DNYJlLUA5tMCwt7mQ5QPfcnroqDOeAXBFRAAFTqeg08',
+          urlD: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGluEEuhVnPC7seEJVrrZnKvbYOl5rj6RJKA&usqp=CAU',
+          poopUrl: '' // on popule via la première ligne dans la méthode created (la méthode de Vue, pas les méthodes déclarées)
+          ,
+          texteBrut: 'Vue c\'est facile',
+          texteHtml: '<strong>Vue</strong> c\'est facile'
+        } 
+      },
+      created() {
+        this.poopUrl = this.urlC // on dit que quand le DOM est mounted, alors on popule poopUrl avec urlC. C'est ce qu'on appelle utiliser un hook dans le cycle de vie de l'application
+      },
+      methods: {
+        toggle() {
+          this.tempUrl === this.urlA ? this.tempUrl = this.urlB : this.tempUrl = this.urlA
+          
+        },
+        togglePoop() {
+          this.poopUrl = (this.poopUrl === this.urlC) 
+          ? this.poopUrl = this.urlD 
+          : this.poopUrl = this.urlC
+        }
+      }
+    }); 
+    const vm = app.mount('#app') // on dit qu'elle doit être mount dans l'élément qui a l'id app
+    
+    setTimeout(() => {
+      vm.texteBrut = "nouveau texte"
+    }, 5000)
+  </script>
+  
+</body>
+</html>

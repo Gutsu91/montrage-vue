@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon premier projet Vue.js</title>
+  <style>
+    [v-cloak] {
+      display:none;
+    }
+
+    .hidden {
+      opacity: 0;
+    }
+  </style>
+  
+</head>
+<body>
+  <div id="app" v-cloak>
+    <section>
+      <h1 @click="toggle">Sujet</h1>
+      <p v-if="affiche">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi quasi explicabo quam eos, quod optio et. Ut reprehenderit ipsum nam facilis velit error, laborum perferendis quaerat? Adipisci sapiente officiis in.
+      Laudantium sequi aperiam iusto. Voluptatibus placeat rerum quis mollitia numquam quae incidunt, velit doloremque. Quibusdam totam eaque ea, mollitia, saepe excepturi dolore id impedit placeat quisquam quaerat officiis. Quam, cumque.
+      Culpa assumenda fugiat iusto saepe ipsam neque repudiandae dicta ea impedit facere, ratione unde consequatur, ipsum quos aliquid sunt placeat atque! A saepe rerum recusandae corrupti fugiat quos blanditiis hic!</p>
+      <!-- ce qui se passe dans le DOM réel de la réalité véritable: par défaut on voit un commentaire v-if dans le code. Quand on clique, il "décommente le v-if et rend le paragraphe"-->
+      <!-- si on s'attend à ce que l'utilisateur clique plusieurs fois, au lieu de faire un v-if on fait un v-show, c'est moins gourmand en ressources. Il va juste afficher un display:none en css et le retirer au click.
+      
+      C'est exactement la même syntaxe, le même code (avec le toggle, etc...) excepté qu'on utilise v-show comme directive à la place de v-if
+
+      Par contre, sur un v-if il y a un v-else. La structure du code reste la même, on met v-else sur affiche et ça alterne
+      
+      -->
+      <p v-else="affiche">coucou</p>
+      <!-- a savoir qu'il y a également un v-else-if-->
+      <p class="alert" :class="{hidden: !affiche}">zbem zbem</p>
+      <!-- ceci est une classe conditionnelle: si on clique sur sujet alors on change affiche et donc on ajoute la classe hidden. Ca a aussi l'avantage de nous permettre de faire une animation sur l'apparition / disparition d'un texte-->
+      <!-- dans le cas d'une mutliples classes:
+      <p class="alert" :class="{hidden: !affiche, show: affiche">
+        => si affiche est sur false (!affiche) alors on ajoute la classe hidden, si affiche est sur true alors on donne la classe show
+      -->
+    </section>
+
+  </div>
+  <script src="https://unpkg.com/vue@next"></script>
+  <!-- @next pour être sur d'aller chercher la dernière version -->
+  <script>
+    const app = Vue.createApp({ // on déclare l'application avec la methode createApp
+      name: "Zbreh",
+      data() { 
+        return {
+          affiche: false
+        } 
+      },
+      methods: {
+        toggle() {
+          //this.affiche =  this.affiche == false ? true :  false
+          // methode plus rapide:
+          this.affiche = !this.affiche
+        }
+      }
+    }); 
+    const vm = app.mount('#app') // on dit qu'elle doit être mount dans l'élément qui a l'id app
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon premier projet Vue.js</title>
+  <style>
+    [v-cloak] {
+      display:none;
+    }
+  </style>
+  
+</head>
+<body>
+  <div id="app" v-cloak>
+    <section>
+      <p>il est exactement {{ dateFr }} ici</p>
+      <p>Aux états-unis, il est exactement {{ dateUs}} (mais me demande pas sur quel fuseau horaire frr) </p>
+
+      <button 
+        v-on:click="d=new Date()"> <!-- On met un écouteur d'évènement au click pour dire qu'on doit recalculer d avec la methode newDate -->
+        Reset date</button> 
+        <button @click="updateDate()"> <!-- nouvelle syntaxe pour l'écouteur d'événement + utilisation d'une methode pour recalculer l'heure à la place de foutre du javascript dans l'écouteur d'événement-->
+          reset date alternative</button>
+    </section>
+
+  </div>
+  <script src="https://unpkg.com/vue@next"></script>
+  <!-- @next pour être sur d'aller chercher la dernière version -->
+  <script>
+    const app = Vue.createApp({ // on déclare l'application avec la methode createApp
+      name: "firstVueApp",
+      data() { 
+        return {
+          d: new Date() 
+
+        }
+      },
+      computed: { // on indique que ce qui suis doit être une donnée recalculée au moment ou on charge l'application
+        dateFr() {
+          return this.d.toLocaleTimeString() // retourne d contenu dans cette application (this.)
+        },
+        dateUs() {
+          return this.d.toLocaleTimeString('en-US')
+        }
+      },
+      methods: {
+        updateDate() {
+          this.d = new Date()
+        }
+      }
+    }); 
+    app.mount('#app') // on dit qu'elle doit être mount dans l'élément qui a l'id app
+  </script>
+  
+</body>
+</html>
