@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon premier projet Vue.js</title>
+  <style>
+    [v-cloak] {
+      display:none;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 200px;
+    }
+
+  </style>
+  
+</head>
+<body>
+  <div id="app" v-cloak>
+    <section>
+      <h1>Qui suis-je ? Où cours-je ? Dans quelle état j'erre ?</h1>
+      <form action="" @submit.prevent="addPerson" ref="addPerson"><!-- on dit qu'a l'event submit on execute calcul ET on preventDefault() via le .prevent -->
+        <input placeholder="prenom" type="text" v-model="newPerson.prenom"> <!-- on dit que ce champ nourrira le prenom. Si on regarde le field on voit qu'on a renseigné une valeur par défaut "teubé" avec un double pipe -->
+        <input placeholder="nom"type="text" v-model.lazy="newPerson.nom"> <!-- on dit que ce champ nourrira nom. On utilise v-model-lazy pour des raisons de perf: on ne fait l'actualisation que quand on quitte le champ. Ici, .lazy est une propriété du v-model 
+        Autres propriétés:
+        * .trim: jarter les espaces excédentaires
+        * number: converti la string en chiffre (si c'est un chiffre, sinon ça restera un texte hein)
+        * prevent : preventDefault (properiété d'eventListener)
+        *stop: empêche la propagation (.stopPropagation()) (properiété d'eventListener). Met un comportement juste sur l'enfant et empêche la propagation de l'évènement au parent
+        -->
+        <input placeholder="age" type="number" v-model.lazy.number="newPerson.age">
+        
+        <button>Go</button>
+        <hr>
+        <p>{{ newPerson.prenom || 'Teubé' }} {{ newPerson.nom || 'McTeubé' }}, agé de  {{ newPerson.age || '42' }} ans  a été ajouté au personnel</p>
+        <pre v-if="personnel.length > 0">{{personnel}}</pre>
+        <!-- si il y a entrées dans personnel, alors on affiche le tableau personnel -->
+        <ul v-if="personnel.length > 0"> <!-- si il ya  des entrées dans personnel, afficher ul-->
+          <li :key="index" :data-key="index" v-for="(personne, index) in personnel">
+            {{ personne.prenom }} 
+            {{ personne.nom }}
+            , agé de 
+            {{ personne.age }}</li>
+          <!-- pour chaque personne (el, e, une variable qu'on nomme comme on veut) dans le tableau personnel, afficher son prénom, son nom, "agé de" et son age-->
+          <!-- Nb: pour des raisons de performance, il est conseillé d'ajouter une clef lorsqu'on récupère un élément. c'est à ça que correspond le :key. Par contre ce n'est pas populé dans l'html, c'est uniquement pour vue, donc si on a besoin de manipuler le dom via un id il faut ajouter un attribut 'data-' -->
+        </ul>
+        <p v-else> team vide</p> <!-- si pas de données dans personnel alors afficher ce paragraphe-->
+      </form>
+    </section>
+  </div>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script>
+    const app = Vue.createApp({ 
+      name: "Zbreh",
+      data() { 
+        return {
+         newPerson: {
+          prenom: '',
+          nom: '',
+          age: ''
+         },
+         personnel: []
+          /* On peut aussi nourir le dom virtuel avec le dom réel. Mais on ne peut nourir les propriétés du dom virtuel que si elles ont déjà été déclarées au moment ou on crée l'application*/
+        } 
+      },
+      methods: {
+        calcul() {
+          console.log(this.age+1)
+        },
+        addPerson() {
+          this.personnel.push({... this.newPerson}) //on pousse dans le tableau une nouvelle valeur a la suite de ce qui existe déjà (sans les 3 petits points on remplace les valeur existante par celles qu'on a rentré). On destructure l'objet
+          localStorage.setItem('personnel', JSON.stringify(this.personnel)) // on flanque personnel dans le local storage
+          this.$refs.addPerson.reset() // on vide le formulaire après qu'il ait été soumis
+          this.newPerson = {
+          prenom: '',
+          nom: '',
+          age: ''
+         } // on vide les valeurs de newPerson après qu'elles aient été ajoutées
+          console.log(this.personnel)
+        }
+      },
+      created(){
+        localStorage.personnel 
+        ? this.personnel = JSON.parse(localStorage.personnel)
+        : console.log('pas de personnel en mémoire')
+      }
+
+    }); 
+    const vm = app.mount('#app')
+  </script>
+  
+</body>
+</html>
+<!-- 
+TODO list:
+- tâche
+- statut de la tâche
+Si la tâche est completed, alors on ajoute une classe
+
+
+
+-->

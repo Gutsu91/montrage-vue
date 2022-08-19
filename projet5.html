@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon premier projet Vue.js</title>
+  <style>
+    [v-cloak] {
+      display:none;
+    }
+
+    .hidden {
+      opacity: 0;
+    }
+  </style>
+  
+</head>
+<body>
+  <div id="app" v-cloak>
+    <section>
+      <h1 ref="titre">Essai</h1>
+      <p><strong ref="texte">Debut du texte</strong> suite du texte</p>
+    </section>
+  </div>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script>
+    const app = Vue.createApp({ 
+      name: "Zbreh",
+      data() { 
+        return {
+          affiche: false
+        } 
+      },
+      mounted() { //hook quand le dom virtuel est mis dans le dom réel
+        //alert(this.$refs.titre.innerText) 
+        // crée une alerte avec le contenu du titre lorsque le dom virtuel est mis dans le dom réel
+        //alert(this.$refs.texte.innerHTML) 
+        // crée une alerte avec le contenu de ref="texte" lorsque le dom virtuele st mis dans le dom réel
+      }
+    }); 
+    const vm = app.mount('#app')
+  </script>
+  
+</body>
+</html>

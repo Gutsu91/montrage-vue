@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon premier projet Vue.js</title>
+  <style>
+    [v-cloak] {
+      display:none;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 200px;
+    }
+
+  </style>
+  
+</head>
+<body>
+  <div id="app" v-cloak>
+    <section>
+      <h1>Qui suis-je ? Où cours-je ? Dans quelle état j'erre ?</h1>
+      <form action="" @submit.prevent="calcul"><!-- on dit qu'a l'event submit on execute calcul ET on preventDefault() via le .prevent -->
+        <input placeholder="prenom" type="text" v-model="prenom"> <!-- on dit que ce champ nourrira le prenom. Si on regarde le field on voit qu'on a renseigné une valeur par défaut "teubé" avec un double pipe -->
+        <input placeholder="nom"type="text" v-model.lazy="nom"> <!-- on dit que ce champ nourrira nom. On utilise v-model-lazy pour des raisons de perf: on ne fait l'actualisation que quand on quitte le champ. Ici, .lazy est une propriété du v-model 
+        Autres propriétés:
+        * .trim: jarter les espaces excédentaires
+        * number: converti la string en chiffre (si c'est un chiffre, sinon ça restera un texte hein)
+        * prevent : preventDefault (properiété d'eventListener)
+        *stop: empêche la propagation (.stopPropagation()) (properiété d'eventListener). Met un comportement juste sur l'enfant et empêche la propagation de l'évènement au parent
+        -->
+        <input placeholder="age" type="number" v-model.lazy.number="age">
+        
+        <button>Go</button>
+        <hr>
+        <p>Bienvenue {{ prenom || "Teubé" }} {{ nom || 'McTeubé' }}, c'est pas un peu vieux {{ age || '42' }} ans ?</p>
+      </form>
+    </section>
+  </div>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script>
+    const app = Vue.createApp({ 
+      name: "Zbreh",
+      data() { 
+        return {
+          prenom: '',
+          nom: '',
+          age: ''
+          /* On peut aussi nourir le dom virtuel avec le dom réel. Mais on ne peut nourir les propriétés du dom virtuel que si elles ont déjà été déclarées au moment ou on crée l'application*/
+        } 
+      },
+      methods: {
+        calcul() {
+          console.log(this.age+1)
+        }
+      }
+
+    }); 
+    const vm = app.mount('#app')
+  </script>
+  
+</body>
+</html>
